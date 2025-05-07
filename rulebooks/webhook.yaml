@@ -1,0 +1,21 @@
+---
+- name: Listen for storage-monitor events
+  hosts: all
+  sources:
+    - name: check event
+      ansible.eda.webhook:
+        host: 0.0.0.0
+        port: 9900
+  rules:
+    - name: Say Hello - Debug
+      condition: event.payload.message == "Debug"
+      action:
+        debug:
+          msg:
+            - "{{ event.payload }}"
+    - name: Say Hello - AAP
+      condition: event.payload.message == "Ansible"
+      action:
+        run_job_template:
+          name: Demo Job Template
+          organization: Default
